@@ -4,7 +4,7 @@ export DEBIAN_FRONTEND=noninteractive
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password vagrant'
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password vagrant'
 
-sudo apt-get update
+#sudo apt-get update
 
 sudo apt-get install -y software-properties-common python-software-properties
 
@@ -35,15 +35,15 @@ sudo service apache2 restart
 
 curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
 
-cd /var/www/html
+cd /var/www/html || exit 4;
 
 if [ ! -f index.html ]; then
 	sudo rm index.html
 fi
 if [ ! -f settings.php ]; then
-	cp default.settings.php settings.php
-	sed -i 's/_DB_USER_/root/g' settings.php
-	sed -i 's/_DB_PASSWORD_/vagrant/g' settings.php
+	sudo -u www-data cp default.settings.php settings.php
+	sudo -u www-data sed -i 's/_DB_USER_/root/g' settings.php
+	sudo -u www-data sed -i 's/_DB_PASSWORD_/vagrant/g' settings.php
 fi
 
 composer install
